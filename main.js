@@ -71,7 +71,7 @@ addEventListener("mousedown", function () {
 squares.forEach(function (square) {
   //This function will listen for a click, and color that square.
   square.addEventListener("mousedown", function (event) {
-    mouseDown = false;
+
     if (getSize(brush) === "small-brush") {
       const pixel = event.target;
       paint(pixel);
@@ -95,22 +95,47 @@ squares.forEach(function (square) {
         paint(square);
       }
     }
+        mouseDown = false;
   });
 
-  function mediumCheck(id) {
-    if (id % 50 === 0 || (id - 1) % 50 === 0) {
-      return false;
-    } else {
-      return true;
+  //This function takes in one of the squares on the canvas, as an input. Specifically that
+  //sqaure's 'id', which we set at the beginning of the program. The 'id' of the squares is sequential,
+  //so some simple math can determine if the cursor is at, or close to, an edge of the canvas.
+  function sizeCheck(id) {
+    if (getSize(brush) === "medium-brush") {
+      //This statement will check if the cursor is at the furthest right column of the screen.
+      if (id % 50 === 0) {
+        return "right";
+      }
+
+      //This statement will check if the cursor is at the furthest left column of the screen.
+      if ((id - 1) % 50 === 0) {
+        return "left";
+      }
+      //This code returns clear, indicating the program can paint all of the squares in the selected brush size.
+      else {
+        return "clear";
+      }
     }
   }
+
+function cursorBorder (square) {
+
+  square.style.border = '1px solid black';
+
+
+}
 
   //This function will listen for when the cursor enters the square.
   square.addEventListener("mouseenter", function (event) {
     const pixel = event.target;
 
     //This code adds a small border to the hovered square.
-    square.style.border = "1px solid black";
+    // square.style.border = "1px solid black";
+
+//call border function here
+cursorBorder(square);
+
     if (mouseDown === true && getSize(brush) === "small-brush") {
       paint(pixel);
     }
@@ -122,7 +147,7 @@ squares.forEach(function (square) {
       // console.log(mediumCheck(pixelID));
       // console.log(typeof (mediumCheck(pixelID)));
 
-      if (mediumCheck(pixelID)) {
+      if (sizeCheck(pixelID) === "clear") {
         let mediumArr = [];
         mediumArr.push(document.getElementById(pixelID - 50));
         mediumArr.push(document.getElementById(pixelID + 50));
@@ -132,8 +157,7 @@ squares.forEach(function (square) {
           paint(square);
         }
       }
-      // if (mediumCheck(pixelID)) {
-      // }
+
     }
   });
 
