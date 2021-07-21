@@ -21,27 +21,21 @@ while (count <= gridWidth * gridWidth) {
 const brush = document.querySelector(".brush div");
 const brushSizes = document.querySelectorAll(".brush-type div div");
 const brushSizeBoxes = document.querySelectorAll(".bot-size");
+const canvas = document.querySelector(".canvas");
 
 brushSizeBoxes.forEach(function (sizeBox) {
-
-  sizeBox.addEventListener('click', function (event) {
-
-    const newSize = sizeBox.classList.item(3);
-    // console.log(event);
-    // console.log(sizeBox.classList);
-    const oldSize = brush.classList.item(2);
-    console.log(oldSize);
-
-    brush.classList.remove(oldSize);
-    brush.classList.add(newSize);
-
+  sizeBox.addEventListener("click", function (event) {
+    brush.classList.replace(getSize(brush), getSize(sizeBox));
   });
-
-
-
-
-
 });
+
+function getColor(inp) {
+  return inp.classList.item(1);
+}
+
+function getSize(inp) {
+  return inp.classList.item(2);
+}
 
 //PALLETE
 //
@@ -49,41 +43,16 @@ const colors = document.querySelectorAll(".palette-color");
 
 colors.forEach(function (color) {
   color.addEventListener("click", function (event) {
-    //Get just the '2nd' class of the element clicked. This is the CSS class which holds the actual color data.
-    const newColor = event.target.classList.item(1);
-
-    //Set a variable so we can remove a class, without naming it.
-    let oldColor = brush.classList.item(1);
-    brush.classList.remove(oldColor);
-
-    //Assign a new second class to the brush: the color we clicked.
-    brush.classList.add(newColor);
-
-    //Repeat this process for the brush sizes, below the canvas.
+    brush.classList.replace(getColor(brush), getColor(event.target));
     brushSizes.forEach(function (brushSize) {
-
-      let oldColorSize = brushSize.classList.item(1);
-
-      brushSize.classList.remove(oldColorSize);
-      brushSize.classList.add(newColor);
-
-    })
-
+      brushSize.classList.replace(getColor(brushSize), getColor(event.target));
+    });
   });
 });
 
-//I wanted to use a function here, so I could potentially change the color of something else in the program,
-//if it isn't one of the squares/pixels.
-//The 'canvas' input is the element that is getting a new background-color.
-//'Color' is any element that has your chosen new color.
-//***NOTE***//
-//If no color input is provided, this will default to using the current brush color.
-function paint(surface, color) {
-  color === undefined ? (color = brush.classList.item(1)) : "";
-
-  const oldColor = surface.classList.item(1);
-  surface.classList.remove(oldColor);
-  surface.classList.add(color);
+//The 'surface' input is the element that is getting a new background-color.
+function paint(surface) {
+  surface.classList.replace(getColor(surface), getColor(brush));
 }
 
 //SQUARES
@@ -102,11 +71,39 @@ addEventListener("mousedown", function () {
 squares.forEach(function (square) {
   //This function will listen for a click, and color that square.
   square.addEventListener("mousedown", function (event) {
-    const pixel = event.target;
-    paint(pixel);
     mouseDown = false;
-    console.log(event);
+    if (getSize(brush) === "small-brush") {
+      const pixel = event.target;
+      paint(pixel);
+    }
+
+    if (getSize(brush) === "medium-brush") {
+      const pixel = event.target;
+      const pixelID = Number(event.target.id);
+      paint(pixel);
+
+      let mediumArr = [];
+
+      mediumArr.push(document.getElementById(pixelID - 50));
+      mediumArr.push(document.getElementById(pixelID + 50));
+      mediumArr.push(document.getElementById(pixelID - 1));
+      mediumArr.push(document.getElementById(pixelID + 1));
+
+      console.log(mediumArr);
+
+      for (const square of mediumArr) {
+        paint(square);
+      }
+    }
   });
+
+  function mediumCheck(id) {
+    if (id % 50 === 0 || (id - 1) % 50 === 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   //This function will listen for when the cursor enters the square.
   square.addEventListener("mouseenter", function (event) {
@@ -114,12 +111,33 @@ squares.forEach(function (square) {
 
     //This code adds a small border to the hovered square.
     square.style.border = "1px solid black";
-    if (mouseDown === true) {
+    if (mouseDown === true && getSize(brush) === "small-brush") {
       paint(pixel);
+    }
+
+    if (mouseDown === true && getSize(brush) === "medium-brush") {
+      const pixelID = Number(event.target.id);
+      paint(pixel);
+
+      // console.log(mediumCheck(pixelID));
+      // console.log(typeof (mediumCheck(pixelID)));
+
+      if (mediumCheck(pixelID)) {
+        let mediumArr = [];
+        mediumArr.push(document.getElementById(pixelID - 50));
+        mediumArr.push(document.getElementById(pixelID + 50));
+        mediumArr.push(document.getElementById(pixelID - 1));
+        mediumArr.push(document.getElementById(pixelID + 1));
+        for (const square of mediumArr) {
+          paint(square);
+        }
+      }
+      // if (mediumCheck(pixelID)) {
+      // }
     }
   });
 
-    //This code removes the small border.
+  //This code removes the small border.
   square.addEventListener("mouseleave", function () {
     square.style.border = null;
   });
