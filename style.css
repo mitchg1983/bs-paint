@@ -1,9 +1,13 @@
 .app {
   display: flex;
-  height: 500px;
+  height: 530px;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
+  align-items:center;
+  justify-content: flex-start;
+  background-color: lightgrey;
+  margin: 10px;
+  padding: 25px;
+  width: auto;
 
 }
 
@@ -11,7 +15,54 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  justify-content: space-between;
 }
+
+h3 {
+  margin: 1px;
+}
+
+.message {
+  margin: 1px;
+}
+
+.brush-type {
+  display: flex;
+  margin-top: 260px;
+}
+
+.brushSizeBox {
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 2;
+
+}
+
+
+
+.small-icon {
+height: 8px;
+width: 8px;
+border-radius: 4px;
+border: solid black 1px;
+}
+
+.medium-icon {
+  height: 16px;
+  width: 16px;
+  border-radius: 8px;
+  border: solid black 1px;
+}
+
+.large-icon {
+  height: 24px;
+  width: 24px;
+  border-radius: 12px;
+  border: solid black 1px;
+  z-index: 1;
+}
+
 
 .brush-selection {
   height: 70px;
@@ -45,12 +96,18 @@
   border: 1px solid black;
 }
 
+.bot-size {
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+}
+
 .canvas {
   display: grid;
-  grid-template-rows: repeat(10, 1fr);
-  grid-template-columns: repeat(10, 1fr);
-  height: 300px;
-  width: 300px;
+  grid-template-rows: repeat(50, 1fr);
+  grid-template-columns: repeat(50, 1fr);
+  height: 450px;
+  width: 450px;
   border: 1px solid black;
   margin-top: 10px;
 }
@@ -76,5 +133,5 @@
 }
 
 .color-5 {
- background-color: #faf8f8ea;
+ background-color: #ffffff;
 }

@@ -2,20 +2,20 @@
 <html lang="en">
   <head>
     <title>BS Paint 1.0</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="./style.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="./style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
+    <section class="headings">
+      <h3>BS Paint 1.0</h3>
+      <p class="message">Paint away!</p>
+    </section>
     <section class="app">
-      <section class="headings">
-        <h3>BS Paint 1.0</h3>
-        <p class="message">Paint away!</p>
-      </section>
       <section class="paint">
         <section class="brush-selection">
           <section class="palette">
-            <img class="icon palette-icon" src="palette.png">
+            <img class="icon palette-icon" src="palette.png" />
             <div class="palette-color color-1"></div>
             <div class="palette-color color-2"></div>
             <div class="palette-color color-3"></div>
@@ -23,14 +23,31 @@
             <div class="palette-color color-5"></div>
           </section>
           <section class="brush">
-            <div class="current-brush color-2">
-              <img class="icon brush-icon" src="paintbrush.png">
+            <div class="current-brush color-2 small-brush">
+              <img class="icon brush-icon" src="paintbrush.png" />
             </div>
           </section>
         </section>
-        <section class="canvas">
-        </section>
+        <section class="canvas"></section>
       </section>
+
+      <section class="brush-type">
+        <div class="bot-size color-5 brushSizeBox small-brush">
+          <div class="small-icon color-1 small-brush"></div>
+        </div>
+        <div class="bot-size color-5 brushSizeBox medium-brush">
+          <div class="medium-icon color-1 medium-brush"></div>
+        </div>
+        <div class="bot-size color-5 brushSizeBox large-brush">
+          <div class="large-icon color-1 large-brush"></div>
+        </div>
+        <section class="sizes">
+
+        </section>
+
+      </section>
+
+
     </section>
     <script src="./main.js"></script>
   </body>

@@ -1,168 +1,126 @@
 /*******************
  * OUR HELPER CODE *
-*******************/
+ *******************/
 
-/*
- * Here we add the squares to the canvas dynamically.
- * You can mostly leave this section alone!
- * But if you want to change how wide the canvas is,
- * there are just two steps:
- * 
- * 1. Change the `gridWidth` value below.
- * 2. Change the `grid-template-rows` and
- * `grid-template-columns` to match.
- *
- * To make the second one happen, the number to change
- * is the first argument to `repeat`, currently set at 10.
- */
-const gridWidth = 10;
+const gridWidth = 50;
 let count = 0;
 while (count <= gridWidth * gridWidth) {
-  const canvas = document.querySelector('.canvas');
-  const div = document.createElement('div');
-  div.className = 'square color-5';
+  const canvas = document.querySelector(".canvas");
+  const div = document.createElement("div");
+  div.className = "square color-5";
+
+  //Here I assign a unique ID to each square in the canvas.
+  div.id = count + 1;
+
   canvas.appendChild(div);
   count++;
 }
 
-
 //BRUSH
 //
-const brush = document.querySelector('.brush div');
+const brush = document.querySelector(".brush div");
+const brushSizes = document.querySelectorAll(".brush-type div div");
+const brushSizeBoxes = document.querySelectorAll(".bot-size");
 
+brushSizeBoxes.forEach(function (sizeBox) {
+
+  sizeBox.addEventListener('click', function (event) {
+
+    const newSize = sizeBox.classList.item(3);
+    // console.log(event);
+    // console.log(sizeBox.classList);
+    const oldSize = brush.classList.item(2);
+    console.log(oldSize);
+
+    brush.classList.remove(oldSize);
+    brush.classList.add(newSize);
+
+  });
+
+
+
+
+
+});
 
 //PALLETE
 //
-//This selects the five color options.
-const colors = document.querySelectorAll('.palette-color');
+const colors = document.querySelectorAll(".palette-color");
 
-//Loop through all the color options, assign them all an event listener.
-colors.forEach(function (color){
-  color.addEventListener('click', function (event) {
-    //Upon clicking a color, get the list of all the classes associated with the chosen element.
-    //More specifically, get just the '2nd' class of the element. This should always be the color.
+colors.forEach(function (color) {
+  color.addEventListener("click", function (event) {
+    //Get just the '2nd' class of the element clicked. This is the CSS class which holds the actual color data.
     const newColor = event.target.classList.item(1);
 
     //Set a variable so we can remove a class, without naming it.
     let oldColor = brush.classList.item(1);
     brush.classList.remove(oldColor);
 
-    //Assign a new second class to the brush, the color we clicked.
+    //Assign a new second class to the brush: the color we clicked.
     brush.classList.add(newColor);
-  })
-})
 
+    //Repeat this process for the brush sizes, below the canvas.
+    brushSizes.forEach(function (brushSize) {
 
-function paint(canvas, color) {
+      let oldColorSize = brushSize.classList.item(1);
 
-  const oldColor = canvas.classList.item(1);
-  
-  canvas.classList.remove(oldColor);
+      brushSize.classList.remove(oldColorSize);
+      brushSize.classList.add(newColor);
 
-  canvas.classList.add(color);
+    })
+
+  });
+});
+
+//I wanted to use a function here, so I could potentially change the color of something else in the program,
+//if it isn't one of the squares/pixels.
+//The 'canvas' input is the element that is getting a new background-color.
+//'Color' is any element that has your chosen new color.
+//***NOTE***//
+//If no color input is provided, this will default to using the current brush color.
+function paint(surface, color) {
+  color === undefined ? (color = brush.classList.item(1)) : "";
+
+  const oldColor = surface.classList.item(1);
+  surface.classList.remove(oldColor);
+  surface.classList.add(color);
 }
-
-
 
 //SQUARES
 //
-const squares = document.querySelectorAll('.canvas div');
+const squares = document.querySelectorAll(".canvas div");
+let mouseDown = false;
+
+addEventListener("mouseup", function () {
+  mouseDown = false;
+});
+
+addEventListener("mousedown", function () {
+  mouseDown = true;
+});
 
 squares.forEach(function (square) {
-  square.addEventListener('click', function (event) {
+  //This function will listen for a click, and color that square.
+  square.addEventListener("mousedown", function (event) {
+    const pixel = event.target;
+    paint(pixel);
+    mouseDown = false;
+    console.log(event);
+  });
 
-    const currentColor = brush.classList.item(1);
-    const oldColor = event.target.classList.item(1);
+  //This function will listen for when the cursor enters the square.
+  square.addEventListener("mouseenter", function (event) {
+    const pixel = event.target;
 
+    //This code adds a small border to the hovered square.
+    square.style.border = "1px solid black";
+    if (mouseDown === true) {
+      paint(pixel);
+    }
+  });
 
-
-  })
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// You probably should NOT do these in the order below.
-// That is, you probably should NOT do all the queries,
-// THEN all the functions,
-// THEN all the wiring.
-
-// Instead, it'll be easier if you go one action at a time!
-// So, add a query for the palette colors.
-// THEN add an event listener function for what happens when one is clicked.
-// THEN wire those two together, so that when the palette elements are clicked,
-// the function runs.
-//
-// And proceed from there to getting the squares working.
-//
-
-// ALSO.
-// You do not have to follow the sections below. If you're doing your functions inline, it doesn't make a lot of sense to separate the event listener functions from their wiring!
-
-/***********
- * QUERIES *
-***********/
-
-// Add queries for all your squares, palette colors, and brush here.
-// (Note the singular or plural used in that sentence!)
-
-
-
-/****************************
- * EVENT LISTENER FUNCTIONS *
-****************************/
-
-// Now add some functions to handle clicking one particular square
-// and clicking one particular palette color. You can leave them
-// empty at first, though a console.log just to know they're being
-// run as event listeners (after the next step is set up) isn't a
-// bad idea for testing purposes.
-
-
-
-/**************************
- * WIRING IT ALL TOGETHER *
-**************************/
-
-// Now: wiring up our event listeners to our html node elements.
-// You'll need to add the appropriate event listener for each
-// square and for each palette color from the functions you
-// wrote above.
+    //This code removes the small border.
+  square.addEventListener("mouseleave", function () {
+    square.style.border = null;
+  });
+});
