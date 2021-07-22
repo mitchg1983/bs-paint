@@ -11,7 +11,7 @@ while (count <= gridWidth * gridWidth) {
 
   canvas.appendChild(div);
   count++;
-};
+}
 
 //Declare global variables.
 const brush = document.querySelector(".brush div");
@@ -40,6 +40,8 @@ let mouseDown = false;
 
 let justPainted = false;
 
+let runner = ''
+
 //Global event listeners, tracking mouse click position.
 addEventListener("mouseup", function () {
   mouseDown = false;
@@ -56,12 +58,12 @@ addEventListener("mousedown", function () {
 //This function returns, as a string, the current background color of the input element.
 function getColor(inp) {
   return inp.classList.item(1);
-};
+}
 
 //Same as above, but returns the brush size.
 function getSize(inp) {
   return inp.classList.item(2);
-};
+}
 
 //PAINT FUNCTION - The 'surface' input is the element that is getting a new background-color.
 function paint(surface, color) {
@@ -70,7 +72,7 @@ function paint(surface, color) {
   } else {
     surface.classList.replace(getColor(surface), color);
   }
-};
+}
 
 //This function takes in one of the squares on the canvas, as an input. Specifically that
 //sqaure's 'id', which we set at the beginning of the program. The 'id' of the squares is sequential,
@@ -101,7 +103,7 @@ function sizeCheck(id) {
 //'Highlights' the currenlty hovered square on the canvas.
 function cursorBorder(square) {
   square.style.border = "1px solid black";
-};
+}
 
 ////////////////
 ////////////////
@@ -156,34 +158,34 @@ squares.forEach(function (square) {
         mediumArr.push(document.getElementById(pixelID - 50));
         mediumArr.push(document.getElementById(pixelID + 50));
         mediumArr.push(document.getElementById(pixelID + 1));
-      };
+      }
 
       if (sizeCheck(pixelID) === "right") {
         mediumArr.push(document.getElementById(pixelID - 50));
         mediumArr.push(document.getElementById(pixelID + 50));
         mediumArr.push(document.getElementById(pixelID - 1));
-      };
+      }
 
       if (sizeCheck(pixelID) === "top") {
         mediumArr.push(document.getElementById(pixelID + 50));
         mediumArr.push(document.getElementById(pixelID - 1));
         mediumArr.push(document.getElementById(pixelID + 1));
-      };
+      }
 
       if (sizeCheck(pixelID) === "bot") {
         mediumArr.push(document.getElementById(pixelID - 50));
         mediumArr.push(document.getElementById(pixelID - 1));
         mediumArr.push(document.getElementById(pixelID + 1));
-      };
+      }
 
       //Paint the additional squares in our array.
       for (const square of mediumArr) {
         paint(square);
-      };
+      }
 
       //This line helps our shade function for larger brush sizes.
       justPainted = true;
-    };
+    }
 
     //smile-brush
     if (getSize(brush) === "smile-brush") {
@@ -217,10 +219,45 @@ squares.forEach(function (square) {
 
       for (const square of smileArr) {
         paint(square);
-      };
+      }
 
       justPainted = true;
-    };
+    }
+
+    if (getSize(brush) === "random-brush") {
+      
+      if (runner === '') {
+      runner = setInterval(crazy, 5);
+      } else {
+        clearInterval(runner);
+        runner = '';
+      }
+
+
+      function crazy () {
+      for (const square of squares) {
+        console.log(square);
+        const roll = Math.floor(Math.random() * 5);
+        if (roll === 0) {
+          paint(square, "color-1");
+        };
+        if (roll === 1) {
+          paint(square, "color-2");
+        };
+        if (roll === 2) {
+          paint(square, "color-3");
+        };
+        if (roll === 3) {
+          paint(square, "color-4");
+        };
+        if (roll === 4) {
+          paint(square, "color-5");
+        };
+
+
+      }
+    }
+    }
 
     //Race-Condition fix. The mouseenter eventlistener will not fire.
     mouseDown = false;

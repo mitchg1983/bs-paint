@@ -65,6 +65,13 @@ h3 {
   border: solid black 1px;
 }
 
+.random-icon {
+  height: 25px;
+  width: 3px;
+  border-radius: 1px;
+  border: solid black 1px;
+}
+
 .brush-selection {
   height: 70px;
   display: flex;
