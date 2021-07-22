@@ -26,15 +26,15 @@ const colors = document.querySelectorAll(".palette-color");
 
 const squares = document.querySelectorAll(".canvas div");
 
-let oldNcolor = '';
+let oldNcolor = "";
 
-let oldScolor = '';
+let oldScolor = "";
 
-let oldEcolor = '';
+let oldEcolor = "";
 
-let oldWcolor = '';
+let oldWcolor = "";
 
-let oldCcolor = ''
+let oldCcolor = "";
 
 let mouseDown = false;
 
@@ -84,6 +84,10 @@ function sizeCheck(id) {
 
     if ((id - 1) % 50 === 0) {
       return "left";
+    }
+
+    if (1 <= id <= 50) {
+      return "top";
     } else {
       return "clear";
     }
@@ -138,19 +142,39 @@ squares.forEach(function (square) {
       let mediumArr = [];
 
       if (sizeCheck(pixelID) === "clear") {
+        mediumArr.push(document.getElementById(pixelID - 1));
+        mediumArr.push(document.getElementById(pixelID + 1));
+        mediumArr.push(document.getElementById(pixelID - 50));
+        mediumArr.push(document.getElementById(pixelID + 50));
+      }
+
+      if (sizeCheck(pixelID) === "left") {
+        mediumArr.push(document.getElementById(pixelID - 50));
+        mediumArr.push(document.getElementById(pixelID + 50));
+        mediumArr.push(document.getElementById(pixelID + 1));
+      }
+
+      if (sizeCheck(pixelID) === "right") {
         mediumArr.push(document.getElementById(pixelID - 50));
         mediumArr.push(document.getElementById(pixelID + 50));
         mediumArr.push(document.getElementById(pixelID - 1));
-        mediumArr.push(document.getElementById(pixelID + 1));
-
-        //Paint the additional squares in our array.
-        for (const square of mediumArr) {
-          paint(square);
-        }
-
-        //This line helps our shade function for larger brush sizes.
-        justPainted = true;
       }
+
+      if (sizeCheck(pixelID) === "top") {
+        mediumArr.push(document.getElementById(pixelID + 50));
+        mediumArr.push(document.getElementById(pixelID - 1));
+        mediumArr.push(document.getElementById(pixelID + 1));
+      }
+
+
+
+      //Paint the additional squares in our array.
+      for (const square of mediumArr) {
+        paint(square);
+      }
+
+      //This line helps our shade function for larger brush sizes.
+      justPainted = true;
     }
 
     //Race-Condition fix. The mouseenter eventlistener will not fire.
@@ -162,15 +186,14 @@ squares.forEach(function (square) {
     const pixel = event.target;
     oldCcolor = getColor(square);
 
-
     //These two statements help our shade function for larger brush sizes.
     if (mouseDown === false) {
       justPainted = false;
-    };
+    }
 
     if (mouseDown === true) {
       justPainted = true;
-    };
+    }
 
     //Highlight the 'hovered' square with a thin, black border.
     cursorBorder(square);
@@ -179,17 +202,40 @@ squares.forEach(function (square) {
     if (getSize(brush) === "medium-brush") {
       //I assigned each square/pixel of the canvas a unique id - starting at the number 1.
       const pixelID = Number(event.target.id);
-      // oldNcolor = '';
-      // oldScolor = '';
-      // oldEcolor = '';
-      // oldWcolor = '';
 
       if (sizeCheck(pixelID) === "clear") {
+        const E = document.getElementById(pixelID - 1);
+        oldEcolor = getColor(E);
+        paint(E, "cecece");
 
+        const W = document.getElementById(pixelID + 1);
+        oldWcolor = getColor(W);
+        paint(W, "cecece");
 
+        const N = document.getElementById(pixelID - 50);
+        oldNcolor = getColor(N);
+        paint(N, "cecece");
 
+        const S = document.getElementById(pixelID + 50);
+        oldScolor = getColor(S);
+        paint(S, "cecece");
+      }
 
+      if (sizeCheck(pixelID) === "left") {
+        const N = document.getElementById(pixelID - 50);
+        oldNcolor = getColor(N);
+        paint(N, "cecece");
 
+        const S = document.getElementById(pixelID + 50);
+        oldScolor = getColor(S);
+        paint(S, "cecece");
+
+        const W = document.getElementById(pixelID + 1);
+        oldWcolor = getColor(W);
+        paint(W, "cecece");
+      }
+
+      if (sizeCheck(pixelID) === "right") {
         const N = document.getElementById(pixelID - 50);
         oldNcolor = getColor(N);
         paint(N, "cecece");
@@ -201,31 +247,7 @@ squares.forEach(function (square) {
         const E = document.getElementById(pixelID - 1);
         oldEcolor = getColor(E);
         paint(E, "cecece");
-
-        const W = document.getElementById(pixelID + 1);
-        oldWcolor = getColor(W);
-        paint(W, "cecece");
       }
-
-      // if (sizeCheck(pixelID) === "left") {
-      //   console.log("we got a left brush");
-
-      //   document.getElementById(pixelID - 50).style.backgroundcolor =
-      //     getColor(brush);
-      //   document.getElementById(pixelID + 50).style.backgroundcolor =
-      //     getColor(brush);
-      //   document.getElementById(pixelID + 1).style.backgroundcolor =
-      //     getColor(brush);
-      // }
-
-      // if (sizeCheck(pixelID) === "right") {
-      //   document.getElementById(pixelID - 50).style.backgroundcolor =
-      //     getColor(brush);
-      //   document.getElementById(pixelID + 50).style.backgroundcolor =
-      //     getColor(brush);
-      //   document.getElementById(pixelID - 1).style.backgroundcolor =
-      //     getColor(brush);
-      // }
     }
 
     //small-brush
@@ -276,8 +298,6 @@ squares.forEach(function (square) {
         }
       }
     }
-
-    
   });
 
   //////   Listen for when the cursor EXITS the square!   /////
@@ -285,27 +305,40 @@ squares.forEach(function (square) {
   square.addEventListener("mouseleave", function (event) {
     square.style.border = null;
 
+    const pixelID = Number(event.target.id);
+
+    //Set variables for the squares surrounding the 'square' are leaving.
+    const N = document.getElementById(pixelID - 50);
+    const S = document.getElementById(pixelID + 50);
+    const E = document.getElementById(pixelID - 1);
+    const W = document.getElementById(pixelID + 1);
+
     //Remove the lightgray shading, indicating the larger brush-size, and replace it with the previous color.
     //justPainted will stop this 'color replacement' if the user has painted with a large brush size,
     //but not yet left the square.
-    if (getSize(brush) === 'medium-brush' && mouseDown === false && justPainted === false) {
-      const pixelID = Number(event.target.id);
-
-
+    if (
+      getSize(brush) === "medium-brush" &&
+      mouseDown === false &&
+      justPainted === false
+    ) {
       if (sizeCheck(pixelID) === "clear") {
-      const N = document.getElementById(pixelID - 50);
-      paint(N, oldNcolor)
+        paint(E, oldEcolor);
+        paint(W, oldWcolor);
+        paint(N, oldNcolor);
+        paint(S, oldScolor);
+      }
 
-      const S = document.getElementById(pixelID + 50);
-      paint(S, oldScolor);
+      if (sizeCheck(pixelID) === "left") {
+        paint(N, oldNcolor);
+        paint(S, oldScolor);
+        paint(W, oldWcolor);
+      }
 
-      const E = document.getElementById(pixelID - 1);
-      paint(E, oldEcolor);
-
-      const W = document.getElementById(pixelID + 1);
-      paint(W, oldWcolor);
+      if (sizeCheck(pixelID) === "right") {
+        paint(N, oldNcolor);
+        paint(S, oldScolor);
+        paint(E, oldEcolor);
+      }
     }
-  }
-
   });
 });
