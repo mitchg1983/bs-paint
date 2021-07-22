@@ -8,7 +8,6 @@
   margin: 10px;
   padding: 25px;
   width: auto;
-
 }
 
 .headings {
@@ -32,20 +31,17 @@ h3 {
 }
 
 .brushSizeBox {
-display: flex;
-align-items: center;
-justify-content: center;
-z-index: 2;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 }
 
-
-
 .small-icon {
-height: 8px;
-width: 8px;
-border-radius: 4px;
-border: solid black 1px;
+  height: 8px;
+  width: 8px;
+  border-radius: 4px;
+  border: solid black 1px;
 }
 
 .medium-icon {
@@ -60,9 +56,14 @@ border: solid black 1px;
   width: 24px;
   border-radius: 12px;
   border: solid black 1px;
-  z-index: 1;
 }
 
+.smile-icon {
+  height: 12px;
+  width: 20px;
+  border-radius: 4px;
+  border: solid black 1px;
+}
 
 .brush-selection {
   height: 70px;
@@ -114,25 +115,24 @@ border: solid black 1px;
 
 .square {
   transition: 0.5s;
-  
 }
 
 .color-1 {
- background-color: #06d6a0;
+  background-color: #06d6a0;
 }
 
 .color-2 {
- background-color: #f00699;
+  background-color: #f00699;
 }
 
 .color-3 {
- background-color: #faa275;
+  background-color: #faa275;
 }
 
 .color-4 {
- background-color: #228cdb;
+  background-color: #228cdb;
 }
 
 .color-5 {
- background-color: #ffffff;
+  background-color: #ffffff;
 }

@@ -11,7 +11,7 @@ while (count <= gridWidth * gridWidth) {
 
   canvas.appendChild(div);
   count++;
-}
+};
 
 //Declare global variables.
 const brush = document.querySelector(".brush div");
@@ -56,12 +56,12 @@ addEventListener("mousedown", function () {
 //This function returns, as a string, the current background color of the input element.
 function getColor(inp) {
   return inp.classList.item(1);
-}
+};
 
 //Same as above, but returns the brush size.
 function getSize(inp) {
   return inp.classList.item(2);
-}
+};
 
 //PAINT FUNCTION - The 'surface' input is the element that is getting a new background-color.
 function paint(surface, color) {
@@ -70,7 +70,7 @@ function paint(surface, color) {
   } else {
     surface.classList.replace(getColor(surface), color);
   }
-}
+};
 
 //This function takes in one of the squares on the canvas, as an input. Specifically that
 //sqaure's 'id', which we set at the beginning of the program. The 'id' of the squares is sequential,
@@ -86,8 +86,12 @@ function sizeCheck(id) {
       return "left";
     }
 
-    if (1 <= id <= 50) {
+    if (id <= 50 && id >= 1) {
       return "top";
+    }
+
+    if (id <= 2500 && id >= 2451) {
+      return "bot";
     } else {
       return "clear";
     }
@@ -97,7 +101,7 @@ function sizeCheck(id) {
 //'Highlights' the currenlty hovered square on the canvas.
 function cursorBorder(square) {
   square.style.border = "1px solid black";
-}
+};
 
 ////////////////
 ////////////////
@@ -152,30 +156,71 @@ squares.forEach(function (square) {
         mediumArr.push(document.getElementById(pixelID - 50));
         mediumArr.push(document.getElementById(pixelID + 50));
         mediumArr.push(document.getElementById(pixelID + 1));
-      }
+      };
 
       if (sizeCheck(pixelID) === "right") {
         mediumArr.push(document.getElementById(pixelID - 50));
         mediumArr.push(document.getElementById(pixelID + 50));
         mediumArr.push(document.getElementById(pixelID - 1));
-      }
+      };
 
       if (sizeCheck(pixelID) === "top") {
         mediumArr.push(document.getElementById(pixelID + 50));
         mediumArr.push(document.getElementById(pixelID - 1));
         mediumArr.push(document.getElementById(pixelID + 1));
-      }
+      };
 
-
+      if (sizeCheck(pixelID) === "bot") {
+        mediumArr.push(document.getElementById(pixelID - 50));
+        mediumArr.push(document.getElementById(pixelID - 1));
+        mediumArr.push(document.getElementById(pixelID + 1));
+      };
 
       //Paint the additional squares in our array.
       for (const square of mediumArr) {
         paint(square);
-      }
+      };
 
       //This line helps our shade function for larger brush sizes.
       justPainted = true;
-    }
+    };
+
+    //smile-brush
+    if (getSize(brush) === "smile-brush") {
+      const pixel = event.target;
+      const pixelID = Number(event.target.id);
+
+      let smileArr = [];
+
+      //left eye
+      smileArr.push(document.getElementById(pixelID - 52));
+      smileArr.push(document.getElementById(pixelID - 102));
+      smileArr.push(document.getElementById(pixelID - 152));
+
+      //right eye
+      smileArr.push(document.getElementById(pixelID - 48));
+      smileArr.push(document.getElementById(pixelID - 98));
+      smileArr.push(document.getElementById(pixelID - 148));
+
+      //smile
+      smileArr.push(document.getElementById(pixelID + 97));
+      smileArr.push(document.getElementById(pixelID + 103));
+      smileArr.push(document.getElementById(pixelID + 147));
+      smileArr.push(document.getElementById(pixelID + 148));
+      smileArr.push(document.getElementById(pixelID + 152));
+      smileArr.push(document.getElementById(pixelID + 153));
+      smileArr.push(document.getElementById(pixelID + 198));
+      smileArr.push(document.getElementById(pixelID + 199));
+      smileArr.push(document.getElementById(pixelID + 200));
+      smileArr.push(document.getElementById(pixelID + 201));
+      smileArr.push(document.getElementById(pixelID + 202));
+
+      for (const square of smileArr) {
+        paint(square);
+      };
+
+      justPainted = true;
+    };
 
     //Race-Condition fix. The mouseenter eventlistener will not fire.
     mouseDown = false;
@@ -184,7 +229,12 @@ squares.forEach(function (square) {
   //////   Listen for when the cursor enters the square!   /////
   square.addEventListener("mouseenter", function (event) {
     const pixel = event.target;
-    oldCcolor = getColor(square);
+    const pixelID = Number(event.target.id);
+
+    let E = document.getElementById(pixelID - 1);
+    let W = document.getElementById(pixelID + 1);
+    let N = document.getElementById(pixelID - 50);
+    let S = document.getElementById(pixelID + 50);
 
     //These two statements help our shade function for larger brush sizes.
     if (mouseDown === false) {
@@ -199,54 +249,66 @@ squares.forEach(function (square) {
     cursorBorder(square);
 
     //Highlight the brush size area. Will have no effect if small-brush is selected.
-    if (getSize(brush) === "medium-brush") {
-      //I assigned each square/pixel of the canvas a unique id - starting at the number 1.
-      const pixelID = Number(event.target.id);
+    if (getSize(brush) === "medium-brush" && mouseDown === false) {
+      const cece = "cecece";
 
       if (sizeCheck(pixelID) === "clear") {
-        const E = document.getElementById(pixelID - 1);
         oldEcolor = getColor(E);
-        paint(E, "cecece");
+        paint(E, cece);
 
-        const W = document.getElementById(pixelID + 1);
         oldWcolor = getColor(W);
-        paint(W, "cecece");
+        paint(W, cece);
 
-        const N = document.getElementById(pixelID - 50);
         oldNcolor = getColor(N);
-        paint(N, "cecece");
+        paint(N, cece);
 
-        const S = document.getElementById(pixelID + 50);
         oldScolor = getColor(S);
-        paint(S, "cecece");
+        paint(S, cece);
       }
 
       if (sizeCheck(pixelID) === "left") {
-        const N = document.getElementById(pixelID - 50);
         oldNcolor = getColor(N);
-        paint(N, "cecece");
+        paint(N, cece);
 
-        const S = document.getElementById(pixelID + 50);
         oldScolor = getColor(S);
-        paint(S, "cecece");
+        paint(S, cece);
 
-        const W = document.getElementById(pixelID + 1);
         oldWcolor = getColor(W);
-        paint(W, "cecece");
+        paint(W, cece);
       }
 
       if (sizeCheck(pixelID) === "right") {
-        const N = document.getElementById(pixelID - 50);
         oldNcolor = getColor(N);
-        paint(N, "cecece");
+        paint(N, cece);
 
-        const S = document.getElementById(pixelID + 50);
         oldScolor = getColor(S);
-        paint(S, "cecece");
+        paint(S, cece);
 
-        const E = document.getElementById(pixelID - 1);
         oldEcolor = getColor(E);
-        paint(E, "cecece");
+        paint(E, cece);
+      }
+
+      if (sizeCheck(pixelID) === "top") {
+        oldEcolor = getColor(E);
+        paint(E, cece);
+
+        oldWcolor = getColor(W);
+        paint(W, cece);
+
+        oldNcolor = getColor(S);
+        paint(S, cece);
+      }
+
+      if (sizeCheck(pixelID) === "bot") {
+        console.log("bot here");
+        oldEcolor = getColor(E);
+        paint(E, cece);
+
+        oldWcolor = getColor(W);
+        paint(W, cece);
+
+        oldNcolor = getColor(N);
+        paint(N, cece);
       }
     }
 
@@ -273,29 +335,34 @@ squares.forEach(function (square) {
         mediumArr.push(document.getElementById(pixelID + 50));
         mediumArr.push(document.getElementById(pixelID - 1));
         mediumArr.push(document.getElementById(pixelID + 1));
-
-        for (const square of mediumArr) {
-          paint(square);
-        }
       }
+
       if (sizeCheck(pixelID) === "left") {
         mediumArr.push(document.getElementById(pixelID - 50));
         mediumArr.push(document.getElementById(pixelID + 50));
         mediumArr.push(document.getElementById(pixelID + 1));
-
-        for (const square of mediumArr) {
-          paint(square);
-        }
       }
 
       if (sizeCheck(pixelID) === "right") {
         mediumArr.push(document.getElementById(pixelID - 50));
         mediumArr.push(document.getElementById(pixelID + 50));
         mediumArr.push(document.getElementById(pixelID - 1));
+      }
 
-        for (const square of mediumArr) {
-          paint(square);
-        }
+      if (sizeCheck(pixelID) === "top") {
+        mediumArr.push(document.getElementById(pixelID + 1));
+        mediumArr.push(document.getElementById(pixelID + 50));
+        mediumArr.push(document.getElementById(pixelID - 1));
+      }
+
+      if (sizeCheck(pixelID) === "bot") {
+        mediumArr.push(document.getElementById(pixelID + 1));
+        mediumArr.push(document.getElementById(pixelID - 50));
+        mediumArr.push(document.getElementById(pixelID - 1));
+      }
+
+      for (const square of mediumArr) {
+        paint(square);
       }
     }
   });
@@ -338,6 +405,18 @@ squares.forEach(function (square) {
         paint(N, oldNcolor);
         paint(S, oldScolor);
         paint(E, oldEcolor);
+      }
+
+      if (sizeCheck(pixelID) === "top") {
+        paint(E, oldEcolor);
+        paint(W, oldWcolor);
+        paint(S, oldScolor);
+      }
+
+      if (sizeCheck(pixelID) === "bot") {
+        paint(E, oldEcolor);
+        paint(W, oldWcolor);
+        paint(N, oldNcolor);
       }
     }
   });
